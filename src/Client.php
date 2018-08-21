@@ -63,5 +63,22 @@ class Client {
         return socket_strerror($erron);
     }
 
+    /**
+     * 发送数据
+     * @param $data
+     * @return int
+     */
+    public function send($data) {
+        return socket_send($this->socket, $data, strlen($data), 0);
+    }
 
+    /**
+     * 接收信息
+     * @param $buf
+     * @param $len
+     * @return int
+     */
+    public function recv(&$buf, $len) {
+        return socket_recv($this->socket, $buf, $len, 0);
+    }
 }
