@@ -225,7 +225,6 @@ class SMTP extends Client {
         $this->readCommand('250', 'end error');
         $this->sendCommand("quit");
         $this->readCommand('221', 'quit error');
-        $this->close();
         return $this;
     }
 }

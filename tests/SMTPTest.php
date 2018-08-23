@@ -59,7 +59,7 @@ class SMTPTest extends TestCase {
      * @throws \HuanL\Protocol\SMTPException
      */
     public function testSendHtml() {
-        static::$smtp->mailTitle('html测试')
+        static::$smtp->mailTitle('html测试1')
             ->mailContent('<h1>html测试</h1>')
             ->sendMail();
         self::assertEquals(1, 1);
