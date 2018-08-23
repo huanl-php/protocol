@@ -13,6 +13,7 @@ namespace HuanL\Protocol\Test;
 
 require_once '../src/Client.php';
 require_once '../src/SMTP.php';
+require_once '../src/SMTPException.php';
 
 use HuanL\Protocol\Client;
 use HuanL\Protocol\SMTP;
@@ -34,8 +35,17 @@ class SMTPTest extends TestCase {
         }
     }
 
-    public function testLogin() {
-//        $this->assertEquals(substr($read, 0, 3), '220');
-//        $this->client->send("ehlo test@xloli.top\r\n");
+    public function testSend() {
+        try {
+            $this->smtp->mailFrom('test@xloli.top')
+                ->mailTo('code.farmer@qq.com')
+                ->mailTitle('test123标题')
+                ->mailContent('test2354235354中文呢');
+            $this->smtp->sendMail();
+            self::assertEquals(1, 1);
+        } catch (\Exception $exception) {
+            self::assertEquals(1, 0);
+        }
     }
+
 }

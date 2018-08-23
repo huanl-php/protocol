@@ -81,6 +81,7 @@ class Client {
      * @return int
      */
     public function send(string $data): int {
+        echo $data;
         return socket_send($this->socket, $data, strlen($data), 0);
     }
 
@@ -140,5 +141,10 @@ class Client {
      */
     public function socket() {
         return $this->socket;
+    }
+
+
+    public function close() {
+        socket_close($this->socket);
     }
 }
