@@ -22,30 +22,48 @@ use PHPUnit\Framework\TestCase;
 class SMTPTest extends TestCase {
 
     /**
-     * @var Client
+     * @var SMTP
      */
-    protected $smtp;
+    protected static $smtp = null;
 
     public function __construct(string $name = null, array $data = [], string $dataName = '') {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->smtp = new SMTP('smtp.xloli.top', 'test@xloli.top', 'Qwer1234');
+            if (static::$smtp == null) {
+                static::$smtp = new SMTP('smtp.xloli.top', 'test@xloli.top', 'Qwer1234');
+            }
         } catch (\Exception $exception) {
             echo $exception->getMessage();
         }
     }
 
-    public function testSend() {
-        try {
-            $this->smtp->mailFrom('test@xloli.top')
-                ->mailTo('code.farmer@qq.com')
-                ->mailTitle('test123标题')
-                ->mailContent('test2354235354中文呢');
-            $this->smtp->sendMail();
-            self::assertEquals(1, 1);
-        } catch (\Exception $exception) {
-            self::assertEquals(1, 0);
-        }
+    public function testConnect() {
+        static::$smtp->mailFrom('test@xloli.top', '测试')
+            ->mailTo('code.farmer@qq.com');
+        self::assertEquals(1, 1);
     }
+
+    /**
+     * @depends testConnect
+     * @throws \HuanL\Protocol\SMTPException
+     */
+    public function testSendText() {
+        static::$smtp->mailTitle('text测试')
+            ->mailContent('test2354235354中文呢')
+            ->sendMail();
+        self::assertEquals(1, 1);
+    }
+
+    /**
+     * @depends testConnect
+     * @throws \HuanL\Protocol\SMTPException
+     */
+    public function testSendHtml() {
+        static::$smtp->mailTitle('html测试')
+            ->mailContent('<h1>html测试</h1>')
+            ->sendMail();
+        self::assertEquals(1, 1);
+    }
+
 
 }
