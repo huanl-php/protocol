@@ -31,8 +31,5 @@ class ClientTest extends TestCase {
 
     public function testSSLConnect() {
         $client = new SSLClient();
-        $client->connect('blog.icodef.com', 443);
-        $client->recv($buf, 1024);
-        echo $buf;
     }
 }

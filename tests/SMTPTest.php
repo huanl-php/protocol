@@ -18,6 +18,7 @@ require_once '../src/SMTPException.php';
 
 use HuanL\Protocol\Client;
 use HuanL\Protocol\SMTP;
+use HuanL\Protocol\SSLClient;
 use PHPUnit\Framework\TestCase;
 
 class SMTPTest extends TestCase {
@@ -31,7 +32,9 @@ class SMTPTest extends TestCase {
         parent::__construct($name, $data, $dataName);
         try {
             if (static::$smtp == null) {
-                static::$smtp = new SMTP('smtp.mxhichina.com', 'test@xloli.top', 'Qwer1234', 465);
+                $client = new SSLClient('smtp.mxhichina.com', 465);
+                $client->timeout(2, 2);
+                static::$smtp = new SMTP($client, 'test@xloli.top', 'Qwer1234');
             }
         } catch (\Exception $exception) {
             echo $exception->getMessage();
