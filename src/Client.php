@@ -44,7 +44,7 @@ class Client {
      */
     public function connect(string $ip, int $port, int $type = 1): bool {
         //TODO: 暂时只写udp和tcp
-        if ($type === 1) {
+        if ($type === static::TCP) {
             $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         } else {
             $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -98,9 +98,9 @@ class Client {
     /**
      * 数据写入缓存
      * @param string $buf
-     * @return string
+     * @return int
      */
-    public function write(string $buf): string {
+    public function write(string $buf): int {
         return socket_write($this->socket, $buf, strlen($buf));
     }
 
@@ -113,6 +113,31 @@ class Client {
         return socket_read($this->socket, $len);
     }
 
+    /**
+     * 用于udp的发送
+     * @param $buf
+     * @param $len
+     * @param $flags
+     * @param $addr
+     * @param $port
+     * @return int
+     */
+    public function sendto($buf, $len, $flags, $addr, $port): int {
+        return socket_sendto($this->socket, $buf, $len, $flags, $addr, $port);
+    }
+
+    /**
+     * 用于udp的接收
+     * @param $buf
+     * @param $len
+     * @param $flags
+     * @param $addr
+     * @param $port
+     * @return int
+     */
+    public function recvfrom(&$buf, $len, $flags, &$addr, &$port): int {
+        return socket_recvfrom($this->socket, $buf, $len, $flags, $addr, $port);
+    }
 
     /**
      * 设置超时
@@ -143,7 +168,9 @@ class Client {
         return $this->socket;
     }
 
-
+    /**
+     * 关闭socket资源
+     */
     public function close() {
         socket_close($this->socket);
     }

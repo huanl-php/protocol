@@ -12,6 +12,7 @@
 namespace HuanL\Protocol\Test;
 
 require_once '../src/Client.php';
+require_once '../src/SSLClient.php';
 require_once '../src/SMTP.php';
 require_once '../src/SMTPException.php';
 
@@ -30,7 +31,7 @@ class SMTPTest extends TestCase {
         parent::__construct($name, $data, $dataName);
         try {
             if (static::$smtp == null) {
-                static::$smtp = new SMTP('smtp.xloli.top', 'test@xloli.top', 'Qwer1234');
+                static::$smtp = new SMTP('smtp.mxhichina.com', 'test@xloli.top', 'Qwer1234', 465);
             }
         } catch (\Exception $exception) {
             echo $exception->getMessage();

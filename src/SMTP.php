@@ -11,7 +11,7 @@
 
 namespace HuanL\Protocol;
 
-class SMTP extends Client {
+class SMTP extends SSLClient {
 
     /**
      * 是否输入内容

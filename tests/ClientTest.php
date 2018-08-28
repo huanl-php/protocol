@@ -13,9 +13,11 @@ namespace HuanL\Protocol\Test;
 
 
 use HuanL\Protocol\Client;
+use HuanL\Protocol\SSLClient;
 use PHPUnit\Framework\TestCase;
 
 require_once '../src/Client.php';
+require_once '../src/SSLClient.php';
 
 class ClientTest extends TestCase {
 
@@ -25,5 +27,12 @@ class ClientTest extends TestCase {
         $client->send('test');
         $client->recv($buf, 1024);
         $this->assertEquals($buf, 'lswl');
+    }
+
+    public function testSSLConnect() {
+        $client = new SSLClient();
+        $client->connect('blog.icodef.com', 443);
+        $client->recv($buf, 1024);
+        echo $buf;
     }
 }
