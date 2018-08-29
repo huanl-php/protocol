@@ -29,7 +29,4 @@ class ClientTest extends TestCase {
         $this->assertEquals($buf, 'lswl');
     }
 
-    public function testSSLConnect() {
-        $client = new SSLClient();
-    }
 }
