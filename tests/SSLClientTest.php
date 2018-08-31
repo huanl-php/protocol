@@ -35,7 +35,7 @@ class SSLClientTest extends TestCase {
     }
 
     public function testSSLHello() {
-        $str = SSL::pac_ssl_handshake(22, SSL::TLSv3,
+        $str = SSL::pack_ssl_handshake(22, SSL::TLSv3,
             SSL::pack_ssl_hello(1, SSL::TLSv3, SSL::pack_ssl_random(),
                 hex2bin('00') . SSL::pack_ciphersuites(['009c', 'c02f', '003c']) .
                 hex2bin('0100005800000014001200000f626c6f672e69636f6465662e636f6d000500050100000000000a00080006001d00170018000b00020100000d001400120401050102010403050302030202060106030023000000170000ff01000100')
@@ -43,6 +43,11 @@ class SSLClientTest extends TestCase {
         );
         static::$client->send($str);
         static::$client->recv($buf, 2048);
+        echo bin2hex($buf) . "\n";
+        $struct = SSL::unpack_ssl_handshake($buf);
+        $struct = SSL::unpack_ssl_hello($struct['content']);
+        print_r($struct);
+        self::assertEquals(1, 1);
     }
 
 

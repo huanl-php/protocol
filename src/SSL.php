@@ -27,9 +27,19 @@ class SSL {
      * @param $content
      * @return string
      */
-    public static function pac_ssl_handshake($type, $version, $content): string {
-
+    public static function pack_ssl_handshake($type, $version, $content): string {
         return pack('cnn', $type, $version, strlen($content)) . $content;
+    }
+
+    /**
+     * 解码握手包
+     * @param $data
+     * @return array
+     */
+    public static function unpack_ssl_handshake($data): array {
+        $ret = unpack('ccode/nversion/nlength', $data);
+        $ret['content'] = substr($data, 5, $ret['length']);
+        return $ret;
     }
 
     /**
@@ -45,6 +55,23 @@ class SSL {
         return pack('ca3n', $type,
                 chr($len >> 16 & 0xff) . chr($len >> 8 & 0xff) . chr($len & 0xff)
                 , $version) . $random . $content;
+    }
+
+    /**
+     * 解码hello包
+     * @param $data
+     * @return array
+     */
+    public static function unpack_ssl_hello($data): array {
+        $ret = unpack(
+            'ctype/a3length/nversion/a32random/asession_length/ncipher_suite',
+            $data
+        );
+        $ret['length'] = unpack('N', "\x0" . $ret['length'])[1];
+        $ret['random'] = unpack('Ntimestamp/a28random', $ret['random']);
+        $ret['random']['random'] = bin2hex($ret['random']['random']);
+        $ret['content'] = bin2hex(substr($data, 41));
+        return $ret;
     }
 
     /**
@@ -65,8 +92,7 @@ class SSL {
      * 随机数
      * @return string
      */
-    public static function pack_ssl_random(): string {
-        $random = '';
+    public static function pack_ssl_random(&$random = ''): string {
         for ($i = 0; $i < 28; $i++) {
             $random .= chr(rand(0, 255));
         }
